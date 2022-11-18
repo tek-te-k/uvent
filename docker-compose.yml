@@ -1,0 +1,25 @@
+version: '3.6'
+services:
+  data-api:
+    build:
+      context: .
+      dockerfile: .
+    tty: true
+    stdin_open: true
+    environment:
+      ENGINE: PostgreSQLJDBC
+    ports:
+      - 8080:8080
+    volumes:
+      - ./:/go/src/app
+    command: >
+      sh -c "go run main.go"
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:12
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgrespassword
+    ports:
+      - "5432:5432"
