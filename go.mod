@@ -3,6 +3,8 @@ module uvent
 go 1.18
 
 require (
+	github.com/gofrs/uuid v4.3.1+incompatible
+	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/echo/v4 v4.9.1
 	gorm.io/driver/postgres v1.4.5
 	gorm.io/gorm v1.24.1
