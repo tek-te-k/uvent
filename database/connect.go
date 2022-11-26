@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 
+	"uvent/models"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -25,5 +27,5 @@ func Connect() {
 		log.Fatal(err)
 	}
 	DB = conn
-	conn.AutoMigrate()
+	conn.AutoMigrate(&models.User{})
 }

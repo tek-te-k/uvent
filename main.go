@@ -1,7 +1,7 @@
 package main
 
 import (
-	// "uvent/database"
+	"uvent/database"
 	"uvent/routers"
 
 	// "github.com/go-playground/validator/v10"
@@ -9,8 +9,7 @@ import (
 )
 
 func main() {
-	// TODO DB用のdocker-composeを作成する
-	// database.Connect()
+	database.Connect()
 	app := echo.New()
 	// app.Validator = &validate.Validator{Validator: validator.New()}
 	// routers.SetupRouter(app)
