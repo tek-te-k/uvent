@@ -41,6 +41,10 @@ func Signup(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, "birth must be in format '2006-01-02'")
 	}
+	u, _ := database.DB.Model(&models.User{}).Where("email = ?", form.Email).Rows()
+	if u.Next() {
+		return c.JSON(http.StatusBadRequest, "email already exists")
+	}
 	user := models.User{
 		Email:    form.Email,
 		Password: password,
