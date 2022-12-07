@@ -1,13 +1,17 @@
 package models
 
-import "github.com/gofrs/uuid"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type User struct {
-	UserID   uuid.UUID `gorm:"type:uuid;primary_key"`
+	gorm.Model
 	Email    string    `gorm:"type:varchar(100);unique_index"`
 	Password []byte    `gorm:"type:bytea"`
 	Name     string    `gorm:"type:varchar(100)"`
-	Age      int       `gorm:"type:int"`
+	Birth    time.Time `gorm:"type:date"`
 	Address  string    `gorm:"type:varchar(100)"`
 	Gender   string    `gorm:"type:varchar(100)"`
 	Bio      string    `gorm:"type:varchar(100)"`
