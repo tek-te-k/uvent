@@ -6,6 +6,7 @@ import (
 	"uvent/database"
 	"uvent/models"
 
+	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -58,7 +59,44 @@ func Signup(c echo.Context) error {
 	return c.JSON(200, user)
 }
 
+type LoginForm struct {
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required,min=8"`
+}
+
 func Login(c echo.Context) error {
-	// do something
-	return c.JSON(200, "login")
+	form := new(LoginForm)
+	err := c.Bind(&form)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	var user models.User
+	res := database.DB.Where("email = ?", form.Email).First(&user)
+	if res.Error != nil {
+		return c.JSON(http.StatusBadRequest, "email or password is incorrect")
+	}
+	err = bcrypt.CompareHashAndPassword(user.Password, []byte(form.Password))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, "email or password is incorrect")
+	}
+	// JWT Claimsの発行
+	claims := jwt.StandardClaims{
+		Issuer:    user.Email,                            // ユーザIDをstringに変換
+		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(), // JWTトークンの有効期限
+	}
+	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	token, err := jwtToken.SignedString([]byte("secret"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+	cookie := new(http.Cookie)
+	cookie.Name = "email"
+	cookie.Value = user.Email
+	cookie.Expires = time.Now().Add(24 * time.Hour)
+	cookie.Path = "/"
+	c.SetCookie(cookie)
+
+	return c.JSON(200, map[string]string{
+		"token": token,
+	})
 }
