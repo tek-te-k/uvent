@@ -21,10 +21,10 @@ services:
       POSTGRES_PASSWORD: postgrespassword
     ports:
       - "5432:5432"
-  # web:
-  #   image: nginx:alpine
-  #   ports:
-  #     - 8888:80
-  #   privileged: true
-  #   volumes:
-  #     - "./:/usr/share/nginx/html"
+  web:
+    image: nginx:alpine
+    ports:
+      - 8888:80
+    privileged: true
+    volumes:
+      - "./frontend:/usr/share/nginx/html"
