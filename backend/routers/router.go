@@ -7,7 +7,13 @@ import (
 )
 
 func SetupRoutes(app *echo.Echo) {
-	app.POST("/signup", api.Signup)
-	app.POST("/login", api.Login)
-	app.GET("/user", api.GetUserInfo)
+	auth := app.Group("/auth")
+	auth.POST("/signup", api.Signup)
+	auth.POST("/login", api.Login)
+	auth.GET("/user", api.GetUserInfo)
+
+	event := app.Group("event")
+	event.POST("/", api.CreateEvent)
+	event.GET("/:id", api.GetEvent)
+	event.POST("/:id/apply", api.ApplyToEvent)
 }
