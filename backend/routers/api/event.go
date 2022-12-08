@@ -72,7 +72,15 @@ func CreateEvent(c echo.Context) error {
 }
 
 func GetEvent(c echo.Context) error {
-	return nil
+	eventID := c.Param("id")
+	fmt.Println(eventID, "mokemoke")
+	var event models.Event
+	res := database.DB.Where("id = ?", eventID).Find(&event)
+	if res.Error != nil {
+		return c.JSON(http.StatusNotFound, "not found")
+	}
+
+	return c.JSON(http.StatusOK, event)
 }
 
 func ApplyToEvent(c echo.Context) error {
