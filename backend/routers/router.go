@@ -12,7 +12,7 @@ func SetupRoutes(app *echo.Echo) {
 	auth.POST("/login", api.Login)
 	auth.GET("/user", api.GetUserInfo)
 
-	event := app.Group("event")
+	event := app.Group("/event")
 	event.POST("/", api.CreateEvent)
 	event.GET("/:id", api.GetEvent)
 	event.POST("/:id/apply", api.ApplyToEvent)
