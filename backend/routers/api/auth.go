@@ -60,7 +60,7 @@ func Signup(c echo.Context) error {
 	}
 	database.DB.Create(&user)
 
-	return c.JSON(200, user)
+	return c.JSON(http.StatusOK, user)
 }
 
 type LoginForm struct {
@@ -100,7 +100,7 @@ func Login(c echo.Context) error {
 	cookie.Path = "/"
 	c.SetCookie(cookie)
 
-	return c.JSON(200, map[string]string{
+	return c.JSON(http.StatusOK, map[string]string{
 		"token": token,
 	})
 }
@@ -108,12 +108,12 @@ func Login(c echo.Context) error {
 func GetUserInfo(c echo.Context) error {
 	cookie, err := c.Cookie("email")
 	if err != nil {
-		c.JSON(400, "bed req")
+		c.JSON(http.StatusBadRequest, "bed req")
 	}
 	// User IDを取得
 	email := cookie.Value
 	var user models.User
 	database.DB.Where("email = ?", email).First(&user)
 
-	return c.JSON(200, user)
+	return c.JSON(http.StatusOK, user)
 }
