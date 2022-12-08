@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 	"uvent/database"
@@ -107,15 +106,12 @@ func Login(c echo.Context) error {
 }
 
 func GetUserInfo(c echo.Context) error {
-	fmt.Println("getuser")
 	cookie, err := c.Cookie("email")
 	if err != nil {
 		c.JSON(400, "bed req")
 	}
 	// User IDを取得
 	email := cookie.Value
-	fmt.Println(email)
-
 	var user models.User
 	database.DB.Where("email = ?", email).First(&user)
 

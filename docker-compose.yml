@@ -2,8 +2,8 @@ version: '3.6'
 services:
   data-api:
     build:
-      context: .
-      dockerfile: .
+      context: ./backend
+      dockerfile: ./backend
     tty: true
     stdin_open: true
     environment:
@@ -11,7 +11,7 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - ./:/app
+      - ./backend:/app
     depends_on:
       - postgres
   postgres:
@@ -21,3 +21,10 @@ services:
       POSTGRES_PASSWORD: postgrespassword
     ports:
       - "5432:5432"
+  # web:
+  #   image: nginx:alpine
+  #   ports:
+  #     - 8888:80
+  #   privileged: true
+  #   volumes:
+  #     - "./:/usr/share/nginx/html"
