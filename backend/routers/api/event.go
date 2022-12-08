@@ -83,6 +83,39 @@ func GetEvent(c echo.Context) error {
 	return c.JSON(http.StatusOK, event)
 }
 
+type ApplyToEventForm struct {
+	EventID string `json:"event_id" validate:"required"`
+}
+
 func ApplyToEvent(c echo.Context) error {
-	return nil
+	cookie, err := c.Cookie("email")
+	if err != nil {
+		c.JSON(400, "bad request")
+	}
+	email := cookie.Value
+	var user models.User
+	res := database.DB.Where("email = ?", email).First(&user)
+	if res.Error != nil {
+		return c.JSON(500, "internal server error")
+	}
+	form := new(ApplyToEventForm)
+	err = c.Bind(&form)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	var event models.Event
+	res = database.DB.Where("id = ?", form.EventID).Find(&event)
+	if res.Error != nil {
+		return c.JSON(http.StatusNotFound, "not found")
+	}
+	if !event.EndTime.After(time.Now()) {
+		return c.JSON(http.StatusBadRequest, "too late")
+	}
+	participation := models.Participation{
+		UserID: user.ID,
+		EventID: event.ID,
+	}
+	database.DB.Create(&participation)
+
+	return c.JSON(http.StatusOK, participation)
 }

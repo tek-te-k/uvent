@@ -15,5 +15,5 @@ func SetupRoutes(app *echo.Echo) {
 	event := app.Group("/event")
 	event.POST("/", api.CreateEvent)
 	event.GET("/:id", api.GetEvent)
-	event.POST("/:id/apply", api.ApplyToEvent)
+	event.POST("/apply", api.ApplyToEvent)
 }
