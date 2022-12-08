@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 	"uvent/database"
@@ -10,6 +11,10 @@ import (
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 )
+
+type Claims struct {
+	jwt.StandardClaims
+}
 
 type SignupForm struct {
 	Name                 string `json:"name" validate:"required"`
@@ -99,4 +104,20 @@ func Login(c echo.Context) error {
 	return c.JSON(200, map[string]string{
 		"token": token,
 	})
+}
+
+func GetUserInfo(c echo.Context) error {
+	fmt.Println("getuser")
+	cookie, err := c.Cookie("email")
+	if err != nil {
+		c.JSON(400, "bed req")
+	}
+	// User IDを取得
+	email := cookie.Value
+	fmt.Println(email)
+
+	var user models.User
+	database.DB.Where("email = ?", email).First(&user)
+
+	return c.JSON(200, user)
 }

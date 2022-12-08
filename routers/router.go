@@ -9,4 +9,5 @@ import (
 func SetupRoutes(app *echo.Echo) {
 	app.POST("/signup", api.Signup)
 	app.POST("/login", api.Login)
+	app.GET("/user", api.GetUserInfo)
 }
