@@ -45,8 +45,10 @@ func CreateEvent(c echo.Context) error {
 	}
 	endTime, err := time.Parse(time.RFC3339, form.EndTime)
 	if err != nil {
-		
 		return c.JSON(http.StatusBadRequest, "birth must be in format '2006-01-02T15:04:05Z'")
+	}
+	if !endTime.After(startTime) {
+		return c.JSON(http.StatusBadRequest, "end_time is earlier than start_time")
 	}
 	applicationDeadline, err := time.Parse(time.RFC3339, form.ApplicationDeadline)
 	if err != nil {
