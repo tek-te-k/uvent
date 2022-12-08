@@ -27,5 +27,9 @@ func Connect() {
 		log.Fatal(err)
 	}
 	DB = conn
-	conn.AutoMigrate(&models.User{})
+	conn.AutoMigrate(
+		&models.User{},
+		&models.Event{},
+		&models.Participation{},
+	)
 }
