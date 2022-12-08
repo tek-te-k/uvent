@@ -11,15 +11,15 @@ import (
 )
 
 type CreateEventForm struct {
-	Category string `json:"category" validate:"required"`
-	Title  string `json:"title" validate:"required"`
-	Detail  string `json:"detail" validate:"required"`
-	StartTime  string `json:"start_time" validate:"required"`
-	EndTime  string `json:"end_time" validate:"required"`
-	Place string `json:"place" validate:"required"`
-	Address  string `json:"address" validate:"required"`
+	Category            string `json:"category" validate:"required"`
+	Title               string `json:"title" validate:"required"`
+	Detail              string `json:"detail" validate:"required"`
+	StartTime           string `json:"start_time" validate:"required"`
+	EndTime             string `json:"end_time" validate:"required"`
+	Place               string `json:"place" validate:"required"`
+	Address             string `json:"address" validate:"required"`
 	ApplicationDeadline string `json:"application_deadline" validate:"required"`
-	ImageURL string `json:"image_url"`
+	ImageURL            string `json:"image_url"`
 }
 
 func CreateEvent(c echo.Context) error {
@@ -55,16 +55,16 @@ func CreateEvent(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "birth must be in format '2006-01-02T15:04:05Z'")
 	}
 	event := models.Event{
-		Category: form.Category,
-		UserID: user.ID,
-		Title: form.Title,
-		Detail: form.Detail,
-		StartTime: startTime,
-		EndTime: endTime,
-		Place: form.Place,
-		Address: form.Address,
+		Category:            form.Category,
+		UserID:              user.ID,
+		Title:               form.Title,
+		Detail:              form.Detail,
+		StartTime:           startTime,
+		EndTime:             endTime,
+		Place:               form.Place,
+		Address:             form.Address,
 		ApplicationDeadline: applicationDeadline,
-		ImageURL: form.ImageURL,
+		ImageURL:            form.ImageURL,
 	}
 	database.DB.Create(&event)
 
@@ -112,7 +112,7 @@ func ApplyToEvent(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "too late")
 	}
 	participation := models.Participation{
-		UserID: user.ID,
+		UserID:  user.ID,
 		EventID: event.ID,
 	}
 	database.DB.Create(&participation)
