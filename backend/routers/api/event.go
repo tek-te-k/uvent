@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 	"uvent/database"
 	"uvent/models"
@@ -73,7 +74,6 @@ func CreateEvent(c echo.Context) error {
 
 func GetEvent(c echo.Context) error {
 	eventID := c.Param("id")
-	fmt.Println(eventID, "mokemoke")
 	var event models.Event
 	res := database.DB.Where("id = ?", eventID).Find(&event)
 	if res.Error != nil {
@@ -118,4 +118,19 @@ func ApplyToEvent(c echo.Context) error {
 	database.DB.Create(&participation)
 
 	return c.JSON(http.StatusOK, participation)
+}
+
+func GetLatestEvent(c echo.Context) error {
+	limitParam := c.QueryParam("limit")
+	limit, err := strconv.Atoi(limitParam)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, "invalid limit")
+	}
+	var events []models.Event
+	res := database.DB.Limit(limit).Find(&events).Order("created_at desc")
+	if res.Error != nil {
+		return c.JSON(http.StatusNotFound, "not found")
+	}
+
+	return c.JSON(http.StatusOK, events)
 }

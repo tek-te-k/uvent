@@ -16,4 +16,5 @@ func SetupRoutes(app *echo.Echo) {
 	event.POST("/", api.CreateEvent)
 	event.GET("/:id", api.GetEvent)
 	event.POST("/apply", api.ApplyToEvent)
+	event.GET("/latest", api.GetLatestEvent)
 }
